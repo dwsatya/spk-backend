@@ -180,18 +180,3 @@ def delete_user(user_id):
         'message': 'User berhasil dihapus'
     }), 200
 
-@auth_bp.route('/me', methods=['GET'])
-@jwt_required()
-def me():
-    user_id = get_jwt_identity()
-
-    user = User.query.get(user_id)
-
-    if not user:
-        return jsonify({
-            'message': 'User tidak ditemukan'
-        }), 404
-
-    return jsonify({
-        'user': user.to_dict()
-    }), 200
