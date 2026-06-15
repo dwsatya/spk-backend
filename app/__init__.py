@@ -29,4 +29,7 @@ def create_app():
     app.register_blueprint(scores_bp, url_prefix='/api/scores')
     app.register_blueprint(waspas_bp, url_prefix='/api/waspas')
 
+    with app.app_context():
+        db.create_all()
+
     return app
