@@ -172,3 +172,55 @@ class Score(db.Model):
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat()
         }
+    
+class Waspas(db.Model):
+
+    __tablename__ = 'waspas'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    employee_id = db.Column(
+        db.Integer,
+        db.ForeignKey('employees.id'),
+        nullable=False
+    )
+
+    q1_wsm = db.Column(db.Float, nullable=False)
+
+    q2_wpm = db.Column(db.Float, nullable=False)
+
+    q_final = db.Column(db.Float, nullable=False)
+
+    rank = db.Column(db.Integer)
+
+    lambda_value = db.Column(
+        db.Float,
+        default=0.5
+    )
+
+    calculated_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    def to_dict(self):
+
+        return {
+
+            'id': self.id,
+
+            'employee_id': self.employee_id,
+
+            'q1_wsm': self.q1_wsm,
+
+            'q2_wpm': self.q2_wpm,
+
+            'q_final': self.q_final,
+
+            'rank': self.rank,
+
+            'lambda': self.lambda_value,
+
+            'calculated_at': self.calculated_at
+
+        }
