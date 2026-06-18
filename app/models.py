@@ -108,19 +108,67 @@ class Criteria(db.Model):
     def to_dict(self):
 
         return {
-
             'id': self.id,
-
             'code': self.code,
-
             'name': self.name,
-
             'weight': float(self.weight),
-
             'unit': self.unit,
-
             'attribute': self.attribute,
-
             'created_at': self.created_at.isoformat()
+        }
+    
+class Score(db.Model):
 
+    __tablename__ = 'scores'
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    employee_id = db.Column(
+        db.Integer,
+        db.ForeignKey('employees.id'),
+        nullable=False
+    )
+
+    criteria_id = db.Column(
+        db.Integer,
+        db.ForeignKey('criteria.id'),
+        nullable=False
+    )
+
+    value = db.Column(
+        db.Float,
+        nullable=False
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    updated_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow
+    )
+
+    __table_args__ = (
+        db.UniqueConstraint(
+            'employee_id',
+            'criteria_id',
+            name='unique_employee_criteria'
+        ),
+    )
+
+    def to_dict(self):
+
+        return {
+            'id': self.id,
+            'employee_id': self.employee_id,
+            'criteria_id': self.criteria_id,
+            'value': self.value,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat()
         }
