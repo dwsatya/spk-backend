@@ -166,11 +166,8 @@ def update_scores(employee_id):
         if not employee:
 
             return jsonify({
-
                 'success': False,
-
                 'message': 'Employee tidak ditemukan'
-
             }), 404
 
         data = request.get_json()
@@ -180,11 +177,8 @@ def update_scores(employee_id):
         if not scores:
 
             return jsonify({
-
                 'success': False,
-
                 'message': 'scores wajib diisi'
-
             }), 400
 
         for item in scores:
@@ -201,9 +195,25 @@ def update_scores(employee_id):
 
             ).first()
 
+            # Jika sudah ada → update
             if score:
 
                 score.value = value
+
+            # Jika belum ada → buat baru
+            else:
+
+                new_score = Score(
+
+                    employee_id=employee_id,
+
+                    criteria_id=criteria_id,
+
+                    value=value
+
+                )
+
+                db.session.add(new_score)
 
         db.session.commit()
 
@@ -212,47 +222,6 @@ def update_scores(employee_id):
             'success': True,
 
             'message': 'Nilai berhasil diperbarui'
-
-        }), 200
-
-    except Exception as e:
-
-        db.session.rollback()
-
-        return jsonify({
-
-            'success': False,
-
-            'message': str(e)
-
-        }), 500
-    
-@scores_bp.route('/<int:id>', methods=['DELETE'])
-def delete_score(id):
-
-    try:
-
-        score = Score.query.get(id)
-
-        if not score:
-
-            return jsonify({
-
-                'success': False,
-
-                'message': 'Score tidak ditemukan'
-
-            }), 404
-
-        db.session.delete(score)
-
-        db.session.commit()
-
-        return jsonify({
-
-            'success': True,
-
-            'message': 'Score berhasil dihapus'
 
         }), 200
 
